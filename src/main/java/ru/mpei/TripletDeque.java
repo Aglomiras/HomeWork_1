@@ -1,11 +1,12 @@
 package ru.mpei;
 import java.util.*;
 
-public class TripletDeque<T> implements Deque<T> {
+public class TripletDeque<T> implements Deque<T>, Containerable {
     private int maxSizeTripletDeque = 1000;
     private int sizeTripletDeque = 0;
     private MyLinkedDeque<T> firstTrip;
     private MyLinkedDeque<T> lastTrip;
+
     public TripletDeque() {
         MyLinkedDeque<T> myLinkedDeque = new MyLinkedDeque<>();
         firstTrip = myLinkedDeque;
@@ -87,31 +88,29 @@ public class TripletDeque<T> implements Deque<T> {
     @Override
     public boolean offerFirst(T object) {
         if (object == null) {
-            System.out.println("Нельзя добавить null");
+            throw new NullPointerException("Нельзя добавить null");
         } else {
             if (sizeTripletDeque == maxSizeTripletDeque) {
-                System.out.println("Очередь переполнена");
+                throw new IllegalArgumentException("Очередь переполнена");
             } else {
                 addFirst(object);
                 return true;
             }
         }
-        return false;
     }
 
     @Override
     public boolean offerLast(T object) {
         if (object == null) {
-            System.out.println("Нельзя добавить null");
+            throw new NullPointerException("Нельзя добавить null");
         } else {
             if (sizeTripletDeque == maxSizeTripletDeque) {
-                System.out.println("Очередь переполнена");
+                throw new IllegalArgumentException("Очередь переполнена");
             } else {
                 addLast(object);
                 return true;
             }
         }
-        return false;
     }
 
     @Override
@@ -123,6 +122,7 @@ public class TripletDeque<T> implements Deque<T> {
             sizeTripletDeque--;
             if (firstTrip.checkNull() == true) {
                 firstTrip = firstTrip.getLastLink();
+                firstTrip.setNextLink(null);
             }
             return firstElem;
         }
@@ -137,6 +137,7 @@ public class TripletDeque<T> implements Deque<T> {
             sizeTripletDeque--;
             if (lastTrip.checkNull() == true) {
                 lastTrip = lastTrip.getNextLink();
+                lastTrip.setLastLink(null);
             }
             return lastElem;
         }
@@ -205,9 +206,20 @@ public class TripletDeque<T> implements Deque<T> {
         if (object == null) {
             throw new NullPointerException("Нельзя удалить null");
         } else {
-
+            MyLinkedDeque<T> myLinkedDeque = firstTrip;
+            boolean flag = false;
+            while (myLinkedDeque != null) {
+                if (myLinkedDeque.findIndexBool(object) == false) {
+                    myLinkedDeque = myLinkedDeque.getLastLink();
+                } else {
+                    int removeIndex = myLinkedDeque.findIndexObject(object);
+                    myLinkedDeque.getTripletDeque()[removeIndex] = null;
+                    flag = true;
+                    break;
+                }
+            }
+            return flag;
         }
-        return false;
     }
 
     @Override
@@ -285,13 +297,19 @@ public class TripletDeque<T> implements Deque<T> {
     }
 
     @Override
-    public boolean addAll(Collection c) {
-        return false;
+    public boolean addAll(Collection<? extends T> c) {
+        for (T elementCollection : c) {
+            offerLast(elementCollection);
+        }
+        return true;
     }
 
     @Override
     public void clear() {
-
+        MyLinkedDeque<T> myLinkedDeque = new MyLinkedDeque<>();
+        firstTrip = myLinkedDeque;
+        lastTrip = myLinkedDeque;
+        sizeTripletDeque = 0;
     }
 
     @Override
@@ -345,9 +363,16 @@ public class TripletDeque<T> implements Deque<T> {
         if (object == null) {
             throw new NullPointerException("Нельзя удалить null");
         } else {
-
+            boolean flag = false;
+            Iterator<T> iterator = iterator();
+            while (iterator.hasNext()) {
+                if (iterator.next().equals(object)) {
+                    flag = true;
+                    break;
+                }
+            }
+            return flag;
         }
-        return false;
     }
 
     @Override
@@ -357,21 +382,40 @@ public class TripletDeque<T> implements Deque<T> {
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return (size() == 0);
     }
 
     @Override
     public Iterator<T> iterator() {
-        MyLinkedDeque<T> tripletDeque = firstTrip;
-        while (tripletDeque.checkNull() == false) {
-            for (int i = 0; i < tripletDeque.getSizeLinkDeque(); i++) {
-                if (tripletDeque.getTripletDeque()[i] != null) {
-//                    return tripletDeque.getTripletDeque()[i];
-                }
+        Iterator<T> iterator = new Iterator<T>(){
+            private MyLinkedDeque<T> myLinkedDeque = firstTrip;
+            private int resettableCounter = firstTrip.addFirstIndex();
+            private int currentIndex = 0;
+
+            @Override
+            public boolean hasNext() {
+                return (currentIndex < size());
             }
-            tripletDeque = tripletDeque.getLastLink();
-        }
-        return null;
+
+            @Override
+            public T next() {
+                int count;
+                if (resettableCounter == myLinkedDeque.getSizeLinkDeque()) {
+                    myLinkedDeque = myLinkedDeque.getLastLink();
+                    resettableCounter = 0;
+                }
+                count = resettableCounter;
+                resettableCounter++;
+                currentIndex++;
+                return (T) myLinkedDeque.getTripletDeque()[count++];
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
+        return iterator;
     }
 
     @Override
@@ -389,4 +433,9 @@ public class TripletDeque<T> implements Deque<T> {
         throw new UnsupportedOperationException("Реализация не поддерживается");
     }
 
+    @Override
+    public Object[] getContainerByIndex(int cIndex) {
+
+        return new Object[0];
+    }
 }

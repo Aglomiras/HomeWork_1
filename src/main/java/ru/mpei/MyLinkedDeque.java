@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 public class MyLinkedDeque<T> {
     private int sizeLinkDeque = 5;
+    private int size;
 //    private T[] tripletDeque = (T[]) new Object[sizeLinkDeque];
     private Object[] tripletDeque;
     private MyLinkedDeque<T> nextLink;
@@ -75,8 +76,10 @@ public class MyLinkedDeque<T> {
                         tripletDeque[i] = tripletDeque[i - 1];
                     }
                     tripletDeque[addFirstIndex()] = element;
+                    size++;
                 } else {
                     tripletDeque[addFirstIndex() - 1] = element;
+                    size++;
                 }
             }
         } else {
@@ -101,8 +104,10 @@ public class MyLinkedDeque<T> {
                         tripletDeque[i] = tripletDeque[i + 1];
                     }
                     tripletDeque[addLastIndex()] = element;
+                    size++;
                 } else {
                     tripletDeque[addLastIndex() + 1] = element;
+                    size++;
                 }
             }
         } else {
@@ -147,9 +152,11 @@ public class MyLinkedDeque<T> {
             if (checkFullMass() == true) {
                 firstElem = (T) tripletDeque[0];
                 tripletDeque[0] = null;
+                size--;
             } else {
                 firstElem = (T) tripletDeque[addFirstIndex()];
                 tripletDeque[addFirstIndex()] = null;
+                size--;
             }
             return firstElem;
         } else {
@@ -166,9 +173,11 @@ public class MyLinkedDeque<T> {
             if (checkFullMass() == true) {
                 lastElem = (T) tripletDeque[this.sizeLinkDeque - 1];
                 tripletDeque[this.sizeLinkDeque - 1] = null;
+                size--;
             } else {
                 lastElem = (T) tripletDeque[addLastIndex()];
                 tripletDeque[addLastIndex()] = null;
+                size--;
             }
             return lastElem;
         } else {
@@ -182,12 +191,16 @@ public class MyLinkedDeque<T> {
      * - Если нету, то возвращает false.
      * */
     public boolean findIndexBool(Object object) {
+        boolean flag = false;
         for (int i = 0; i < sizeLinkDeque; i++) {
-            if (tripletDeque[i].equals(object) == true) {
-                return true;
+            if (tripletDeque[i] != null) {
+                if (tripletDeque[i].equals(object) == true) {
+                    flag = true;
+                    break;
+                }
             }
         }
-        return false;
+        return flag;
     }
     /**
      * Ищет индекс искомого элемента в массиве. После нахождения искомого элемента, запоминает его индекс
@@ -196,9 +209,11 @@ public class MyLinkedDeque<T> {
     public int findIndexObject(Object object) {
         int indexFind = 0;
         for (int i = 0; i < sizeLinkDeque; i++) {
-            if (tripletDeque[i].equals(object) == true) {
-                indexFind = i;
-                break;
+            if (tripletDeque[i] != null) {
+                if (tripletDeque[i].equals(object) == true) {
+                    indexFind = i;
+                    break;
+                }
             }
         }
         return indexFind;
@@ -266,5 +281,13 @@ public class MyLinkedDeque<T> {
 
     public void setLastLink(MyLinkedDeque<T> lastLink) {
         this.lastLink = lastLink;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 }
