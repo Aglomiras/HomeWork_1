@@ -2,6 +2,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.mpei.Containerable;
+import ru.mpei.TripletDeque;
 
 import java.util.*;
 
@@ -9,8 +10,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TripletTests {
 
-    private Deque<String> tQueue;
-    private Containerable cQueue;
+    private Deque<String> tQueue = new TripletDeque<>();
+    private Containerable cQueue = (Containerable) tQueue;
 
     @Test
     void addTest(){

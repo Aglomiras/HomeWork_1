@@ -35,6 +35,7 @@ public class TripletDeque<T> implements Deque<T>, Containerable {
 //                ", lastTrip=" + lastTrip +
 //                '}';
 //    }
+
     /**
      * Метод toStringDeque выводит всю очередь*/
     public void toStringDeque() {
@@ -122,7 +123,7 @@ public class TripletDeque<T> implements Deque<T>, Containerable {
             sizeTripletDeque--;
             if (firstTrip.checkNull() == true) {
                 firstTrip = firstTrip.getLastLink();
-                firstTrip.setNextLink(null);
+//                firstTrip.setNextLink(null); //Удаление ссылки на предшествующий массив (для проверки тестов данная строка не нужна)
             }
             return firstElem;
         }
@@ -137,7 +138,7 @@ public class TripletDeque<T> implements Deque<T>, Containerable {
             sizeTripletDeque--;
             if (lastTrip.checkNull() == true) {
                 lastTrip = lastTrip.getNextLink();
-                lastTrip.setLastLink(null);
+//                lastTrip.setLastLink(null); //Удаление ссылки на следующий массив (для проверки тестов данная строка не нужна)
             }
             return lastElem;
         }
@@ -209,12 +210,60 @@ public class TripletDeque<T> implements Deque<T>, Containerable {
             MyLinkedDeque<T> myLinkedDeque = firstTrip;
             boolean flag = false;
             while (myLinkedDeque != null) {
-                if (myLinkedDeque.findIndexBool(object) == false) {
+                if (myLinkedDeque.findIndexBoolFirst(object) == false) {
                     myLinkedDeque = myLinkedDeque.getLastLink();
                 } else {
-                    int removeIndex = myLinkedDeque.findIndexObject(object);
+                    int removeIndex = myLinkedDeque.findIndexObjectFirst(object);
                     myLinkedDeque.getTripletDeque()[removeIndex] = null;
+                    sizeTripletDeque--;
                     flag = true;
+                    /**
+                     * Цикл по сдвигу массива влево, после удаление определенного элемента
+                     * */
+                    for (int i = removeIndex; i < myLinkedDeque.getSizeLinkDeque(); i++) {
+                        /**
+                         * - Если заменяемое число имеет последнее положение в массиве,
+                         * то оно заменяется первым элементом следующего массива, если тот есть.
+                         * - Если заменяемое число имеет НЕ последнее положение в массиве, то оно заменяется следующим за
+                         * ним элементом.
+                         * */
+                        if (i == myLinkedDeque.getSizeLinkDeque() - 1) {
+                            /**
+                             * - Если следующий массив есть (то есть, ссылка на него присутствует),
+                             * то последний элемент текущего (этого) массива заменяется первым элементом следующего.
+                             * - Если следующего массива нет (ссылка на него отсутствует),
+                             * то последний элемент текущего (этого) массива заменяется на null
+                             * */
+                            if (myLinkedDeque.getLastLink() != null) {
+
+                                if (myLinkedDeque.getLastLink().checkNull() == true) {
+                                    myLinkedDeque.setLastLink(null);
+                                    break;
+                                } else {
+                                    myLinkedDeque.getTripletDeque()[i] = myLinkedDeque.getLastLink().getTripletDeque()[0];
+                                    myLinkedDeque = myLinkedDeque.getLastLink();
+                                    i = -1;
+                                }
+                            } else {
+                                myLinkedDeque.getTripletDeque()[i] = null;
+                            }
+                        } else {
+                            /**
+                             * - Если массив пустой (все элементы равны null),
+                             * то удаляем у предшествующего элемента ссылку на этот массив (это необходимо, чтобы не оставалось пустых
+                             * массивов в том случае, когда при сдвиге элементов, последний сдвинутый элемент, был единственным элементов
+                             * в последнем массиве).
+                             * */
+                            if (myLinkedDeque.checkNull() == true) {
+                                lastTrip = myLinkedDeque.getNextLink();
+                                lastTrip.setLastLink(null);
+//                                myLinkedDeque.getNextLink().setLastLink(null); //Работает, как и код выше, после removeLastOccurrence не знаю почему
+                                break;
+                            } else {
+                                myLinkedDeque.getTripletDeque()[i] = myLinkedDeque.getTripletDeque()[i + 1];
+                            }
+                        }
+                    }
                     break;
                 }
             }
@@ -227,9 +276,66 @@ public class TripletDeque<T> implements Deque<T>, Containerable {
         if (object == null) {
             throw new NullPointerException("Нельзя удалить null");
         } else {
-
+            MyLinkedDeque<T> myLinkedDeque = lastTrip;
+            boolean flag = false;
+            while (myLinkedDeque != null) {
+                if (myLinkedDeque.findIndexBoolLast(object) == false) {
+                    myLinkedDeque = myLinkedDeque.getNextLink();
+                } else {
+                    int removeIndex = myLinkedDeque.findIndexObjectLast(object);
+                    myLinkedDeque.getTripletDeque()[removeIndex] = null;
+                    sizeTripletDeque--;
+                    flag = true;
+                    /**
+                     * Цикл по сдвигу массива вправо, после удаление определенного элемента
+                     * */
+                    for (int i = removeIndex; i >= 0; i--) {
+                        /**
+                         * - Если заменяемое число имеет первое положение в массиве,
+                         * то оно заменяется последним элементом предыдущего массива, если тот есть.
+                         * - Если заменяемое число имеет НЕ первое положение в массиве, то оно заменяется предыдущим элементом.
+                         * */
+                        if (i == 0) {
+                            /**
+                             * - Если предыдущий массив есть (то есть, ссылка на него присутствует),
+                             * то первый элемент текущего (этого) массива заменяется последним элементом предыдущего.
+                             * - Если предыдущего массива нет (ссылка на него отсутствует),
+                             * то первый элемент текущего (этого) массива заменяется на null
+                             * */
+                            if (myLinkedDeque.getNextLink() != null) {
+                                if (myLinkedDeque.getNextLink().checkNull() == true) {
+                                    myLinkedDeque.setNextLink(null);
+                                    break;
+                                } else {
+                                    myLinkedDeque.getTripletDeque()[i] = myLinkedDeque.getNextLink().getTripletDeque()[myLinkedDeque.getSizeLinkDeque() - 1];
+                                    myLinkedDeque = myLinkedDeque.getNextLink();
+                                    i = myLinkedDeque.getSizeLinkDeque();
+                                }
+                            } else {
+                                myLinkedDeque.getTripletDeque()[i] = null;
+                            }
+                        } else {
+                            /**
+                             * - Если массив пустой (все элементы равны null),
+                             * то удаляем у следующего элемента ссылку на этот массив (это необходимо, чтобы не оставалось пустых
+                             * массивов в том случае, когда при сдвиге элементов, последний сдвинутый элемент, был единственным элементов
+                             * в последнем массиве).
+                             * */
+                            if (myLinkedDeque.checkNull() == true) {
+                                firstTrip = myLinkedDeque.getLastLink();
+                                firstTrip.setNextLink(null);
+//                                myLinkedDeque.getLastLink().setNextLink(null); //Не работает, не знаю почему
+                                break;
+                            } else {
+                                myLinkedDeque.getTripletDeque()[i] = myLinkedDeque.getTripletDeque()[i - 1];
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+            return flag;
         }
-        return false;
     }
 
     @Override
@@ -435,7 +541,13 @@ public class TripletDeque<T> implements Deque<T>, Containerable {
 
     @Override
     public Object[] getContainerByIndex(int cIndex) {
+        MyLinkedDeque<T> myLinkedDeque = firstTrip;
+        int countIndex = 0;
 
-        return new Object[0];
+        while (countIndex < cIndex) {
+            myLinkedDeque = myLinkedDeque.getLastLink();
+            countIndex++;
+        }
+        return myLinkedDeque == null ? null : myLinkedDeque.getTripletDeque();
     }
 }

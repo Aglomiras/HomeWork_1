@@ -190,7 +190,7 @@ public class MyLinkedDeque<T> {
      * - Если есть, то возвращает true.
      * - Если нету, то возвращает false.
      * */
-    public boolean findIndexBool(Object object) {
+    public boolean findIndexBoolFirst(Object object) {
         boolean flag = false;
         for (int i = 0; i < sizeLinkDeque; i++) {
             if (tripletDeque[i] != null) {
@@ -203,16 +203,38 @@ public class MyLinkedDeque<T> {
         return flag;
     }
     /**
-     * Ищет индекс искомого элемента в массиве. После нахождения искомого элемента, запоминает его индекс
+     * Ищет индекс первого искомого элемента в массиве. После нахождения искомого элемента, запоминает его индекс
      * и выходит из цикла. Возвращает индекс искомого элемента.
      * */
-    public int findIndexObject(Object object) {
+    public int findIndexObjectFirst(Object object) {
         int indexFind = 0;
         for (int i = 0; i < sizeLinkDeque; i++) {
             if (tripletDeque[i] != null) {
                 if (tripletDeque[i].equals(object) == true) {
                     indexFind = i;
                     break;
+                }
+            }
+        }
+        return indexFind;
+    }
+    public boolean findIndexBoolLast(Object object) {
+        boolean flag = false;
+        for (int i = 0; i < sizeLinkDeque; i++) {
+            if (tripletDeque[i] != null) {
+                if (tripletDeque[i].equals(object) == true) {
+                    flag = true;
+                }
+            }
+        }
+        return flag;
+    }
+    public int findIndexObjectLast(Object object) {
+        int indexFind = 0;
+        for (int i = 0; i < sizeLinkDeque; i++) {
+            if (tripletDeque[i] != null) {
+                if (tripletDeque[i].equals(object) == true) {
+                    indexFind = i;
                 }
             }
         }
