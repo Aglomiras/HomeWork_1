@@ -125,7 +125,6 @@ public class MyLinkedDeque<T> {
                 break;
             }
             index = 0;
-
         }
         return index;
     }

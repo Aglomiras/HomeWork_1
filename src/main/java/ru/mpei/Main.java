@@ -7,21 +7,28 @@ public class Main {
         System.out.println("Hello world!");
 
         TripletDeque<Integer> tripletDeque = new TripletDeque<>();
-        for (int i = 0; i < 27; i++){
+        for (int i = 0; i < 3; i++){
+            System.out.println(i);
             tripletDeque.addLast(i);
+        }
+        System.out.println("------------");
+
+        for (int i = 0; i < 3; i++) {
+            System.out.println(i);
+            tripletDeque.addFirst(i);
         }
         tripletDeque.toStringDeque();
         System.out.println("------------");
-        tripletDeque.addFirst(28);
-        tripletDeque.removeLast();
-        tripletDeque.removeLast();
-        tripletDeque.toStringDeque();
-        System.out.println();
 
-        Iterator<Integer> iterator = tripletDeque.iterator();
-
-        while (iterator.hasNext()){
-            System.out.println(iterator.next());
+        for (int i = 0; i < 3; i++) {
+            System.out.println(tripletDeque.removeFirst());
         }
+        tripletDeque.toStringDeque();
+        System.out.println("------------");
+        for (int i = 0; i < 3; i++) {
+            System.out.println(tripletDeque.removeLast());
+        }
+        tripletDeque.toStringDeque();
+        System.out.println("------------");
     }
 }

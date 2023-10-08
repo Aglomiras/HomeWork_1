@@ -50,7 +50,8 @@ public class TripletDeque<T> implements Deque<T>, Containerable {
     public void addFirst(T object) {
         if (object == null) {
             throw new NullPointerException("Нельзя добавить null");
-        } else {
+        }
+        else {
             if (sizeTripletDeque == maxSizeTripletDeque) {
                 throw new IllegalArgumentException("Очередь переполнена");
             } else {
@@ -509,6 +510,9 @@ public class TripletDeque<T> implements Deque<T>, Containerable {
                 if (resettableCounter == myLinkedDeque.getSizeLinkDeque()) {
                     myLinkedDeque = myLinkedDeque.getLastLink();
                     resettableCounter = 0;
+                }
+                if (myLinkedDeque.getTripletDeque()[resettableCounter] == null) {
+                    throw new NoSuchElementException();
                 }
                 count = resettableCounter;
                 resettableCounter++;
