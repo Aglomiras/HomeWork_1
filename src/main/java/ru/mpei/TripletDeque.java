@@ -37,7 +37,9 @@ public class TripletDeque<T> implements Deque<T>, Containerable {
 //    }
 
     /**
-     * Метод toStringDeque выводит всю очередь*/
+     * Метод toStringDeque выводит всю очередь
+     * Переопределенный toString().
+     * */
     public void toStringDeque() {
         MyLinkedDeque<T> link = firstTrip;
         while (link != null) {
@@ -55,13 +57,32 @@ public class TripletDeque<T> implements Deque<T>, Containerable {
             if (sizeTripletDeque == maxSizeTripletDeque) {
                 throw new IllegalArgumentException("Очередь переполнена");
             } else {
-                if (firstTrip.checkFullMass() == true) {
-                    addTripletDequeFirst();
-                    this.firstTrip.addLast(object);
+                /**
+                 * Необходимо отстроиться от следующего:
+                 * - Если в пустую очередь мы сначала добавили элемент, а потом его удалили,
+                 * то ссылка на какой-либо массив пропадет, да и самого начального массива в очереди
+                 * не останется, поэтому необходимо проверить, не пуста ли очередь.
+                 * - - Если очередь пуста, то необходимо создать первый массив, для добавления туда элементов
+                 * - - Если очередь не пуста, то необходимо проверить заполненность последнего массива
+                 * */
+                if (sizeTripletDeque == 0) {
+
+                    MyLinkedDeque<T> myLinkedDeque = new MyLinkedDeque<>();
+                    firstTrip = myLinkedDeque;
+                    lastTrip = myLinkedDeque;
+
+                    myLinkedDeque.addLast(object);
                     this.sizeTripletDeque++;
+
                 } else {
-                    this.firstTrip.addFirst(object);
-                    this.sizeTripletDeque++;
+                    if (firstTrip.checkFullMass() == true) {
+                        addTripletDequeFirst();
+                        this.firstTrip.addLast(object);
+                        this.sizeTripletDeque++;
+                    } else {
+                        this.firstTrip.addFirst(object);
+                        this.sizeTripletDeque++;
+                    }
                 }
             }
         }
@@ -75,13 +96,32 @@ public class TripletDeque<T> implements Deque<T>, Containerable {
             if (sizeTripletDeque == maxSizeTripletDeque) {
                 throw new IllegalArgumentException("Очередь переполнена");
             } else {
-                if (lastTrip.checkFullMass() == true) {
-                    addTripletDequeLast();
-                    this.lastTrip.addFirst(object);
+                /**
+                 * Необходимо отстроиться от следующего:
+                 * - Если в пустую очередь мы сначала добавили элемент, а потом его удалили,
+                 * то ссылка на какой-либо массив пропадет, да и самого начального массива в очереди
+                 * не останется, поэтому необходимо проверить, не пуста ли очередь.
+                 * - - Если очередь пуста, то необходимо создать первый массив, для добавления туда элементов
+                 * - - Если очередь не пуста, то необходимо проверить заполненность последнего массива
+                 * */
+                if (sizeTripletDeque == 0) {
+
+                    MyLinkedDeque<T> myLinkedDeque = new MyLinkedDeque<>();
+                    firstTrip = myLinkedDeque;
+                    lastTrip = myLinkedDeque;
+
+                    myLinkedDeque.addFirst(object);
                     this.sizeTripletDeque++;
+
                 } else {
-                    this.lastTrip.addLast(object);
-                    this.sizeTripletDeque++;
+                    if (lastTrip.checkFullMass() == true) {
+                        addTripletDequeLast();
+                        this.lastTrip.addFirst(object);
+                        this.sizeTripletDeque++;
+                    } else {
+                        this.lastTrip.addLast(object);
+                        this.sizeTripletDeque++;
+                    }
                 }
             }
         }
@@ -545,6 +585,9 @@ public class TripletDeque<T> implements Deque<T>, Containerable {
 
     @Override
     public Object[] getContainerByIndex(int cIndex) {
+        /**
+         * Вытаскивает определенный массив из очереди
+         * */
         MyLinkedDeque<T> myLinkedDeque = firstTrip;
         int countIndex = 0;
 
@@ -552,6 +595,12 @@ public class TripletDeque<T> implements Deque<T>, Containerable {
             myLinkedDeque = myLinkedDeque.getLastLink();
             countIndex++;
         }
-        return myLinkedDeque == null ? null : myLinkedDeque.getTripletDeque();
+
+        if (myLinkedDeque == null) {
+            return null;
+        } else {
+            return myLinkedDeque.getTripletDeque();
+        }
+
     }
 }

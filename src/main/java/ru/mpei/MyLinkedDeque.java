@@ -124,7 +124,6 @@ public class MyLinkedDeque<T> {
                 index = i;
                 break;
             }
-            index = 0;
         }
         return index;
     }
@@ -138,7 +137,6 @@ public class MyLinkedDeque<T> {
                 index = i;
                 break;
             }
-            index = sizeLinkDeque;
         }
         return index;
     }
@@ -203,7 +201,7 @@ public class MyLinkedDeque<T> {
     }
     /**
      * Ищет индекс первого искомого элемента в массиве. После нахождения искомого элемента, запоминает его индекс
-     * и выходит из цикла. Возвращает индекс искомого элемента.
+     * и выходит из цикла. Возвращает индекс первого искомого элемента.
      * */
     public int findIndexObjectFirst(Object object) {
         int indexFind = 0;
@@ -217,6 +215,11 @@ public class MyLinkedDeque<T> {
         }
         return indexFind;
     }
+    /**
+     * Проверяет, есть ли среди элементов данного массива искомый элемент.
+     * - Если есть, то возвращает true.
+     * - Если нету, то возвращает false.
+     * */
     public boolean findIndexBoolLast(Object object) {
         boolean flag = false;
         for (int i = 0; i < sizeLinkDeque; i++) {
@@ -228,6 +231,10 @@ public class MyLinkedDeque<T> {
         }
         return flag;
     }
+    /**
+     * Ищет индекс последнего искомого элемента в массиве. После нахождения искомого элемента, запоминает его индекс
+     * и выходит из цикла. Возвращает индекс последнего искомого элемента.
+     * */
     public int findIndexObjectLast(Object object) {
         int indexFind = 0;
         for (int i = 0; i < sizeLinkDeque; i++) {

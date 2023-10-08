@@ -139,12 +139,10 @@ public class TripletTests {
             assertEquals(String.valueOf(i), tQueue.removeFirst());
         }
 
-
         for(int i = 0; i < 100; i++){
             tQueue.addLast( String.valueOf(i) );
             assertEquals(String.valueOf(i), tQueue.removeFirst());
         }
-
 
         for(int i = 0; i < 100; i++){
             tQueue.addLast( String.valueOf(i) );
